@@ -75,6 +75,7 @@ void UpdateAgents(float deltaTime)
     }
 }
 
+/////////////////////////////////////////////////////////////////////////
 
 int main(void)
 {
@@ -99,14 +100,14 @@ int main(void)
     //calling in classes
     std::vector<Agent> agents;
     Agent agent;
-    Rigidbody rigidbody;
+    Rigidbody rigidbody; //for mine
 
     //calling on pos, vels and what-not
     agent.rigidbody.position = { 400, 200 };
     agent.rigidbody.velocity = { 10, 0 };
     agent.maxSpeed = 400.0f;
     agent.maxAcceleration = 800.0f;
-    Rigidbody circleA = { SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2 };
+    Rigidbody circleA = { SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2 }; //for stationary
 
 
     //background
@@ -127,7 +128,7 @@ int main(void)
         ClearBackground(RAYWHITE);
 
         //to follow the mouse
-        rigidbody.mousePosition = GetMousePosition();
+        rigidbody.mousePosition = GetMousePosition(); //for mine
 
 
         if (IsKeyDown(KEY_GRAVE)) useGUI = !useGUI;
@@ -173,21 +174,28 @@ int main(void)
         DrawTextureEx(background, (Vector2{ background.width * 2 + scrollingBack, 20 }), 0.0f, 2.0f, WHITE);
 
         //drawing text onto the screen
-        DrawText("Would ya look at that!", 16, 9, 7, RED);
+        DrawText("LAB 2 + 3", 596, 30, 22, GREEN);
+        DrawText(TextFormat("Mouse Position: %.2f, %.2f", rigidbody.mousePosition.x, rigidbody.mousePosition.y), 900, 30, 25, LIGHTGRAY);
+        DrawText(TextFormat("Blue Circle Position: %.2f, %.2f", rigidbody.position.x, rigidbody.position.y), 900, 60, 25, LIGHTGRAY);
 
+        DrawText(TextFormat("Blue Circle Velocity: %.2f, %.2f", agent.rigidbody.velocity.x, agent.rigidbody.velocity.y), 900, 90, 25, LIGHTGRAY);
 
         //drawing circles
-        DrawCircleV(rigidbody.position, 50, DARKBLUE);
-        DrawCircleV(circleA.position, 50, DARKPURPLE);
-        DrawCircleGradient(rigidbody.mousePosition.x, rigidbody.mousePosition.y, 50, GREEN, DARKGREEN);
+        DrawCircleV(rigidbody.position, 50, DARKBLUE); //following that seeks and flees
+        DrawCircleV(circleA.position, 50, DARKPURPLE); //stationary
+        DrawCircleGradient(rigidbody.mousePosition.x, rigidbody.mousePosition.y, 50, GREEN, DARKGREEN); //my circle
 
 
-        //for pointing lines
-        DrawLineV(rigidbody.position, rigidbody.position + agent.rigidbody.velocity, RED);
-        DrawLineV(rigidbody.position, rigidbody.position + acceleration, GREEN);
-        DrawLineV(rigidbody.position, rigidbody.position + (rigidbody.mousePosition - rigidbody.position) * 150, ORANGE);
+        //for pointing lines between the moving and mine
+        DrawLineV(rigidbody.position, rigidbody.position + agent.rigidbody.velocity, RED); //vel
+        DrawLineV(rigidbody.position, rigidbody.position + acceleration, GREEN); //accel
+        DrawLineV(rigidbody.position, rigidbody.position + (rigidbody.mousePosition - rigidbody.position) * 150, ORANGE); //the pos between the two
 
-        DrawFPS(10, 10);
+
+        //for pointing lines between the stationary and mine
+        DrawLineV(circleA.position, circleA.position + (rigidbody.mousePosition - circleA.position) * 150, DARKPURPLE); //the pos between the stationary and mine
+
+        DrawFPS(10, 30);
 
         EndDrawing();
     }
